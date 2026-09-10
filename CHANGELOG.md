@@ -1,3 +1,6 @@
+### UNRELEASED
+- Fix CS0246/CS0234 when a custom type defined in another crate is used in library mode — the consuming file now gets its own `using` alias (or, when configured, its own converter class) instead of forwarding to the defining file's file-scoped alias. `custom_types` configuration is inherited from the defining crate, so it only has to be written once
+
 ### v0.12.0+v0.32.0
 - **BREAKING** Upgrade to [UniFFI 0.32.0](https://mozilla.github.io/uniffi-rs/latest/Upgrading.html)
   - `[ByRef] bytes` / `&[u8]` arguments now cross the FFI as a borrowed `ForeignBytes` (pointer +
