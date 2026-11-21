@@ -92,14 +92,14 @@ class {{ ffi_converter_name }} : FfiConverterRustBuffer<{{ type_name }}>, CallSt
         // Members
         {%- for field in variant.fields() %}
         {%- let field_name = field.name()|or_pos_var(loop.index)|var_name %}
-        public {% call cs::enum_parameter_type_name(field|type_name(ci), variant|error_variant_name) %} {{ field_name }};
+        public {% call cs::enum_parameter_type_name(field, e, true) %} {{ field_name }};
         {%- endfor %}
 
         // Constructor
         public {{ variant|error_variant_name }}(
                 {%- for field in variant.fields() %}
                 {%- let field_name = field.name()|or_pos_var(loop.index)|var_name %}
-                {% call cs::enum_parameter_type_name(field|type_name(ci), variant|error_variant_name) %} {{ field_name }}{% if loop.last %}{% else %}, {% endif %}
+                {% call cs::enum_parameter_type_name(field, e, true) %} {{ field_name }}{% if loop.last %}{% else %}, {% endif %}
                 {%- endfor %}) : base(
                 {%- for field in variant.fields() -%}
                 {%- let field_name = field.name()|or_pos_var(loop.index)|var_name %}

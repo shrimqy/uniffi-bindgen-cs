@@ -236,7 +236,8 @@ void
 
 {#
 // Break the following cycle, where `Rectangle` case name shadow top level `Rectangle` type name.
-// If param type name matches the enum name, prefix the param type name with top level namespace.
+// Any variant name of the enum shadows a top-level type of that name, so if the param type
+// mentions one, write the param type fully qualified, see `variant_field_type_name`.
 // https://github.com/NordSecurity/uniffi-bindgen-cs/issues/60
 //     public record Rectangle(double @width, double @height) { }
 //     public record Shape
@@ -246,10 +247,8 @@ void
 //         public record Ellipse(Ellipse @s) : Shape { }
 //     }
 #}
-{%- macro enum_parameter_type_name(param_type_name, enum_name) %}
-{%- if param_type_name == enum_name %}{{ config.namespace() }}.{{ param_type_name }}
-{%- else %}{{ param_type_name }}
-{%- endif %}
+{%- macro enum_parameter_type_name(field, e, is_error) %}
+{{- field|variant_field_type_name(e, is_error, ci, config) }}
 {%- endmacro %}
 
 {#
