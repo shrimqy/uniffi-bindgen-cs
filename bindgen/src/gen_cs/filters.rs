@@ -39,6 +39,102 @@ pub(super) fn type_name_custom(
     }
 }
 
+/// The type of a field of an enum or error variant. Variants are nested types, so inside one, the
+/// name of any variant of the same enum shadows a top-level type of that name. When the field's type
+/// mentions a variant name, the type is written fully qualified, see `qualified_type_name`.
+pub(super) fn variant_field_type_name(
+    as_type: &impl AsType,
+    e: &Enum,
+    is_error: &bool,
+    ci: &ComponentInterface,
+    config: &Config,
+) -> Result<String, askama::Error> {
+    let typ = as_type.as_type();
+    let plain = type_name(&typ, ci)?;
+    let variant_names = e
+        .variants()
+        .into_iter()
+        .map(|v| {
+            if *is_error {
+                error_variant_name(v)
+            } else {
+                class_name(v.name(), ci)
+            }
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    let shadowed = plain
+        .split(|c: char| !(c.is_alphanumeric() || c == '_'))
+        .any(|word| variant_names.iter().any(|name| name == word));
+    if shadowed {
+        qualified_type_name(&typ, ci, config)
+    } else {
+        Ok(plain)
+    }
+}
+
+/// The type's name written so that no nested type can shadow it: named types with `global::` and
+/// the namespace of the crate that declares them, builtins as keywords or with `global::System`, a
+/// custom type as what its alias stands for (a `using` alias can't be qualified).
+fn qualified_type_name(
+    typ: &Type,
+    ci: &ComponentInterface,
+    config: &Config,
+) -> Result<String, askama::Error> {
+    let qualified = |inner: &Type| qualified_type_name(inner, ci, config);
+    Ok(match typ {
+        Type::Optional { inner_type } => format!("{}?", qualified(inner_type)?),
+        Type::Sequence { inner_type } => format!("{}[]", qualified(inner_type)?),
+        Type::Set { inner_type } => format!(
+            "global::System.Collections.Generic.HashSet<{}>",
+            qualified(inner_type)?
+        ),
+        Type::Map {
+            key_type,
+            value_type,
+        } => format!(
+            "global::System.Collections.Generic.Dictionary<{}, {}>",
+            qualified(key_type)?,
+            qualified(value_type)?
+        ),
+        Type::Box { inner_type } => qualified(inner_type)?,
+        Type::Timestamp => "global::System.DateTime".to_string(),
+        Type::Duration => "global::System.TimeSpan".to_string(),
+        Type::Custom { name, builtin, .. } => match config.custom_types.get(name) {
+            None => qualified(builtin)?,
+            Some(custom) => match &custom.type_name {
+                Some(concrete) => concrete.clone(),
+                None => {
+                    return Err(askama::Error::Custom(
+                        format!(
+                            "custom type `{name}` is used where an enum variant of the same name \
+                             shadows it; set `type_name` for it under \
+                             `[bindings.csharp.custom_types.{name}]`"
+                        )
+                        .into(),
+                    ))
+                }
+            },
+        },
+        Type::Record { .. }
+        | Type::Enum { .. }
+        | Type::Object { .. }
+        | Type::CallbackInterface { .. } => {
+            let namespace = match typ.module_path() {
+                Some(module_path) if typ.crate_name() != Some(ci.crate_name()) => {
+                    let namespace = ci
+                        .namespace_for_type(typ)
+                        .map_err(|e| askama::Error::Custom(e.into()))?;
+                    config.external_package_name(module_path, Some(namespace))
+                }
+                _ => config.namespace(),
+            };
+            format!("global::{namespace}.{}", type_name(typ, ci)?)
+        }
+        // Keywords (`int`, `string`, `byte[]`, ...), which no type name can shadow.
+        _ => type_name(typ, ci)?,
+    })
+}
+
 pub(super) fn canonical_name(as_ct: &impl AsCodeType) -> Result<String, askama::Error> {
     Ok(as_ct.as_codetype().canonical_name())
 }

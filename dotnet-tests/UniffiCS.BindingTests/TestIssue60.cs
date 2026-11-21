@@ -14,4 +14,13 @@ public class ClassIssue60
         new Shape.Rectangle(new Rectangle(1f, 2f));
         new ShapeException.Rectangle(new Rectangle(1f, 2f));
     }
+
+    [Fact]
+    public void TestVariantFieldsShadowedByVariantNames()
+    {
+        var rectangle = new Rectangle(1f, 2f);
+        new WrappedShape.Rectangle(rectangle, new[] { rectangle });
+        new WrappedShape.Ellipse(new Ellipse(3f, 4f), rectangle);
+        new WrappedShape.TimeSpan(System.TimeSpan.FromSeconds(5));
+    }
 }

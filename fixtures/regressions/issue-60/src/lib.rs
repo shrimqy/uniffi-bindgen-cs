@@ -18,6 +18,23 @@ pub enum ShapeError {
     Ellipse { s: Ellipse },
 }
 
+// Variant names also shadow the types that variant fields wrap, the types named by sibling
+// variants, and builtin types.
+#[derive(uniffi::Enum)]
+pub enum WrappedShape {
+    Rectangle {
+        s: Option<Rectangle>,
+        all: Vec<Rectangle>,
+    },
+    Ellipse {
+        s: Ellipse,
+        bounds: Rectangle,
+    },
+    TimeSpan {
+        d: std::time::Duration,
+    },
+}
+
 #[derive(uniffi::Record, Debug)]
 pub struct Rectangle {
     width: f64,
