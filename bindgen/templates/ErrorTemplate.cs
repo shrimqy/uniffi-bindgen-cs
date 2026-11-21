@@ -10,7 +10,7 @@
 {%- call cs::docstring(e, 0) %}
 {%- let error_ffi_converter = ffi_converter_name %}
 {%- let self_lower_prefix = format!("{}.INSTANCE.Lower(this)", error_ffi_converter) %}
-{{ config.access_modifier() }} class {{ type_name }}: UniffiException {
+{{ config.access_modifier() }} partial class {{ type_name }}: UniffiException {
     {{ type_name }}(string message): base(message) {}
 
     // Each variant is a nested class
@@ -76,7 +76,7 @@ class {{ ffi_converter_name }} : FfiConverterRustBuffer<{{ type_name }}>, CallSt
 {%- call cs::docstring(e, 0) %}
 {%- let error_ffi_converter = ffi_converter_name %}
 {%- let self_lower_prefix = format!("{}.INSTANCE.Lower(this)", error_ffi_converter) %}
-{{ config.access_modifier() }} class {{ type_name }}: UniffiException{% if contains_object_references %}, IDisposable {% endif %} {
+{{ config.access_modifier() }} partial class {{ type_name }}: UniffiException{% if contains_object_references %}, IDisposable {% endif %} {
     {{ type_name }}() : base() {}
     {{ type_name }}(String @Message) : base(@Message) {}
 
