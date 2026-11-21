@@ -52,6 +52,7 @@ using {{ alias.alias }} = {{ alias.original_type }};
 {{ type_helper_code }}
 #pragma warning restore 8625
 
+{%- if !ci.function_definitions().is_empty() %}
 {%- match config.global_methods_class_name %}
 {%- when Some(class_name) %}
 {{ config.access_modifier() }} static class {{ class_name }} {
@@ -63,5 +64,6 @@ using {{ alias.alias }} = {{ alias.original_type }};
 {%- include "TopLevelFunctionTemplate.cs" %}
 {%- endfor %}
 }
+{%- endif %}
 
 {% import "macros.cs" as cs %}
