@@ -6,7 +6,7 @@
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 delegate void UniFfiFutureCallback(ulong continuationHandle, byte pollResult);
 
-internal sealed class UniffiForeignFutureHandle : System.IDisposable {
+internal sealed partial class UniffiForeignFutureHandle : System.IDisposable {
     internal CancellationTokenSource Cts { get; } = new CancellationTokenSource();
 #if NET9_0_OR_GREATER
     private readonly Lock _lock = new Lock();
@@ -36,7 +36,7 @@ internal sealed class UniffiForeignFutureHandle : System.IDisposable {
     public void Dispose() { Cts.Dispose(); }
 }
 
-internal static class _UniFFIAsync {
+internal static partial class _UniFFIAsync {
     internal const byte UNIFFI_RUST_FUTURE_POLL_READY = 0;
     // internal const byte UNIFFI_RUST_FUTURE_POLL_MAYBE_READY = 1;
 

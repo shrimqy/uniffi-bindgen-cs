@@ -24,38 +24,38 @@ struct UniffiRustCallStatus {
 }
 
 // Base class for all uniffi exceptions
-{{ config.access_modifier() }} class UniffiException: System.Exception {
+{{ config.access_modifier() }} partial class UniffiException: System.Exception {
     public UniffiException(): base() {}
     public UniffiException(string message): base(message) {}
 }
 
-{{ config.access_modifier() }} class UndeclaredErrorException: UniffiException {
+{{ config.access_modifier() }} partial class UndeclaredErrorException: UniffiException {
     public UndeclaredErrorException(string message): base(message) {}
 }
 
-{{ config.access_modifier() }} class PanicException: UniffiException {
+{{ config.access_modifier() }} partial class PanicException: UniffiException {
     public PanicException(string message): base(message) {}
 }
 
-{{ config.access_modifier() }} class AllocationException: UniffiException {
+{{ config.access_modifier() }} partial class AllocationException: UniffiException {
     public AllocationException(string message): base(message) {}
 }
 
-{{ config.access_modifier() }} class InternalException: UniffiException {
+{{ config.access_modifier() }} partial class InternalException: UniffiException {
     public InternalException(string message): base(message) {}
 }
 
-{{ config.access_modifier() }} class InvalidEnumException: InternalException {
+{{ config.access_modifier() }} partial class InvalidEnumException: InternalException {
     public InvalidEnumException(string message): base(message) {
     }
 }
 
-{{ config.access_modifier() }} class UniffiContractVersionException: UniffiException {
+{{ config.access_modifier() }} partial class UniffiContractVersionException: UniffiException {
     public UniffiContractVersionException(string message): base(message) {
     }
 }
 
-{{ config.access_modifier() }} class UniffiContractChecksumException: UniffiException {
+{{ config.access_modifier() }} partial class UniffiContractChecksumException: UniffiException {
     public UniffiContractChecksumException(string message): base(message) {
     }
 }

@@ -6,7 +6,7 @@
 //
 // All implementing objects should be public to support external types.  When a
 // type is external we need to import it's FfiConverter.
-internal abstract class FfiConverter<CsType, FfiType> {
+internal abstract partial class FfiConverter<CsType, FfiType> {
     // Convert an FFI type to a C# type
     public abstract CsType Lift(FfiType value);
 
@@ -67,7 +67,7 @@ internal abstract class FfiConverter<CsType, FfiType> {
 }
 
 // FfiConverter that uses `RustBuffer` as the FfiType
-internal abstract class FfiConverterRustBuffer<CsType>: FfiConverter<CsType, RustBuffer> {
+internal abstract partial class FfiConverterRustBuffer<CsType>: FfiConverter<CsType, RustBuffer> {
     public override CsType Lift(RustBuffer value) {
         return LiftFromRustBuffer(value);
     }

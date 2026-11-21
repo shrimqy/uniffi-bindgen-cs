@@ -24,7 +24,7 @@
 }
 
 {%- call cs::docstring(obj, 0) %}
-{{ config.access_modifier() }} class {{ impl_name }} : {% if is_error -%}UniffiException, {% endif -%}{{ interface_name }}, IDisposable {
+{{ config.access_modifier() }} partial class {{ impl_name }} : {% if is_error -%}UniffiException, {% endif -%}{{ interface_name }}, IDisposable {
     protected ulong pointer;
     private int _wasDestroyed = 0;
     private long _callCounter = 1;
