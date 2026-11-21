@@ -1,0 +1,12 @@
+[package]
+name = "mutable-records"
+version = "1.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["lib", "cdylib"]
+name = "mutable_records"
+
+[dependencies]
+uniffi = { workspace = true, features = ["build"] }

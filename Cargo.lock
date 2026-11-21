@@ -852,6 +852,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "mutable-records"
+version = "1.0.0"
+dependencies = [
+ "uniffi 0.32.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "nested-sequences"
 version = "0.1.0"
 dependencies = [
@@ -1412,6 +1419,7 @@ dependencies = [
  "issue-60",
  "issue-75",
  "issue-76",
+ "mutable-records",
  "nested-sequences",
  "null-to-empty-string",
  "uniffi-032-types",
