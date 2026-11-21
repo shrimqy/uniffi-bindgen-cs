@@ -39,6 +39,14 @@
     {% if !loop.last %}, {% endif %}
     {%- endfor %}
 ) {% if contains_object_references %}: IDisposable {% endif %}{
+    {%- if config.mutable_records %}
+    {%- for field in rec.fields() %}
+    {%- let property_name = field.name()|property_name %}
+    {%- call cs::docstring(field, 4) %}
+    public {{ field|type_name(ci) }} {{ property_name }} { get; set; } = {{ property_name }};
+    {%- endfor %}
+    {%- endif %}
+
     {%- if contains_object_references %}
     public void Dispose() {
         {%- call cs::destroy_fields(rec, "this") %}

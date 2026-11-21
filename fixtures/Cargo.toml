@@ -21,6 +21,7 @@ enum-variant-field-name-conflict = { path = "regressions/enum-variant-field-name
 nested-sequences = { path = "nested-sequences" }
 issue-165 = { path = "regressions/issue-165" }
 null-to-empty-string = { path = "null-to-empty-string" }
+mutable-records = { path = "mutable-records" }
 uniffi-cs-custom-types-builtin = { path = "custom-types-builtin" }
 uniffi-cs-disposable-fixture = { path = "disposable" }
 uniffi-cs-optional-parameters-fixture = { path = "optional-parameters" }

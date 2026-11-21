@@ -86,6 +86,8 @@ pub struct Config {
     null_string_to_empty: Option<bool>,
     #[serde(default)]
     omit_checksums: bool,
+    #[serde(default)]
+    mutable_records: bool,
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]

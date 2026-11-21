@@ -62,6 +62,13 @@ uniffi-bindgen-cs path/to/definitions.udl --config path/to/uniffi.toml
 
 - `null_string_to_empty` - when set to `true`, `null` strings will be converted to empty strings even if they are not optional.
 
+- `mutable_records` - when set to `true`, record properties get a `set` accessor instead of `init`,
+    so they can be assigned after construction. Records stay positional.
+    ```toml
+    [bindings.csharp]
+    mutable_records = true
+    ```
+
 - `omit_checksums` - when set to `true`, the generated bindings will skip verifying API checksums
     when the library is initialized. This may speed up initialization but removes a safety check
     that catches mismatches between the generated bindings and the Rust library. Only use this if
